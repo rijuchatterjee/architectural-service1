@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: YL0JKTW4T7
+    runs-on: self-hosted
 
     steps:
       - name: Checkout Repository
