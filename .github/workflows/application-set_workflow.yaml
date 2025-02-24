@@ -5,6 +5,10 @@ on:
     types:
       - opened
 
+permissions:
+  contents: write    # Add this to grant write permissions
+  pull-requests: write
+        
 jobs:
   deploy:
     runs-on: self-hosted
@@ -25,10 +29,10 @@ jobs:
 
       - name: Commit and Push Changes (Optional)
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}  # Use the default GITHUB_TOKEN instead of secrets.TOKEN
         run: |
-          git config --global user.name "rijuchatterjee"
-          git config --global user.email "chatterjeeriju56@gmail.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
           git add applicationset.yaml
           git commit -m "Update manifests dynamically for $PR_NAMESPACE" || echo "No changes to commit"
