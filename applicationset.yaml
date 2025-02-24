@@ -9,7 +9,7 @@ spec:
         github:
           api: https://api.github.com/
           owner: rijuchatterjee
-          repo: {REPLACE_REPO_NAME}
+          repo: {REPO_NAME}
           tokenRef:
             secretName: github-token
             key: token
@@ -17,11 +17,11 @@ spec:
             - preview
   template:
     metadata:
-      name: '${REPO_NAME}-pr-{{number}}'
+      name: '{REPO_NAME}-pr-{{number}}'
     spec:
       project: default
       source:
-        repoURL: 'https://x-access-token:${{ secrets.TOKEN }}@github.com/rijuchatterjee/architectural-service1.git'
+        repoURL: 'https://x-access-token:${{ secrets.TOKEN }}@github.com/rijuchatterjee/{REPO_NAME}.git'
         targetRevision: '{{head_sha}}'
         path: helm-chart/
         helm:
@@ -32,7 +32,7 @@ spec:
               value: "latest"
       destination:
         name: in-cluster
-        namespace: '${REPO_NAME}-pr-{{number}}'
+        namespace: '{REPO_NAME}-pr-{{number}}'
       syncPolicy:
         automated:
           selfHeal: true
