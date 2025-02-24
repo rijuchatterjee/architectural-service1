@@ -27,16 +27,17 @@ jobs:
           sed -i '' "s/{REPLACE_REPO_NAME}/${{ github.event.repository.name }}/g" applicationset.yaml
           sed -i '' "s/{REPLACE_REPO_NAME}-pr-{{number}}/$PR_NAMESPACE/g" applicationset.yaml
 
-      - name: Commit and Push Changes (Optional)
+      - name: Commit and Push Changes
+        continue-on-error: true 
         env:
-          GITHUB_TOKEN: ${{ github.token }}  # Use the default GITHUB_TOKEN instead of secrets.TOKEN
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add applicationset.yaml
           git commit -m "Update manifests dynamically for $PR_NAMESPACE" || echo "No changes to commit"
-          git push origin HEAD:$GITHUB_REF
+          # Push to the original branch that created the PR
+          git push origin HEAD:${{ github.head_ref }}
 
       - name: Create Namespace in Kubernetes
         env:
